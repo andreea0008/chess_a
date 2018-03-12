@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>FieldChess.qml</file>
+        <file>FigureImageChess.qml</file>
+    </qresource>
+    <qresource prefix="/image">
+        <file>Img/black_pawn.png</file>
+        <file>Img/white_pawn.png</file>
+        <file>Img/black_king.png</file>
+        <file>Img/white_king.png</file>
+        <file>Img/black_queen.png</file>
+        <file>Img/white_queen.png</file>
+        <file>Img/black_bishop.png</file>
+        <file>Img/white_bishop.png</file>
+        <file>Img/black_knight.png</file>
+        <file>Img/black_rook.png</file>
+        <file>Img/white_knight.png</file>
+        <file>Img/white_rook.png</file>
+    </qresource>
+</RCC>
