@@ -11,6 +11,10 @@ class FigureControllers : public QObject
     Q_OBJECT
     Q_PROPERTY(QVariantList moveList READ moveList WRITE setMoveList NOTIFY moveListChanged)
     Q_PROPERTY(QVariantList beatList READ beatList WRITE setBeatList NOTIFY beatListChanged)
+    enum FIGURE{
+        BLACK_PAWN = 111, BLACK_ROOK = 101, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING,
+        WHITE_PAWN = 211, WHITE_ROOK = 201, WHITE_KNIGHT, WHITE_BISHOP, WHITE_QUEEN, WHITE_KING
+    };
 public:
     explicit FigureControllers(QObject *parent = 0);
 
@@ -42,6 +46,8 @@ private:
     int getIndexThrowRowAndColumn(int row, int column);
     QVector<QVariant> movePawn(bool isWhite, int row, int column);
     QVector<QVariant> canPawnBeat(bool isWhite, int row, int column);
+
+    void printArray();
 
     QVariantList m_moveList;
     QVariantList m_beatList;
