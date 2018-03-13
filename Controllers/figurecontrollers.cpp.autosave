@@ -71,7 +71,8 @@ void FigureControllers::getFigureByIndex(int index)
     int getIdFromArrayFigures = arrayFigures[row][column];
     bool beatFigure = false;
     int beatIndex = -1;
-    if (getIdFromArrayFigures == 0 && selectedIndexFigure != 0)  {
+    
+    if (getIdFromArrayFigures == 0)  {
         qCritical() << "Not_select_figure" << selectedIndexFigure << beatList();
         emit commandMoveToIndex(selectedIndexFigure, index);
         int rowSelectedIndex = selectedIndexFigure / SIZE;

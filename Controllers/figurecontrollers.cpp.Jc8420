@@ -64,6 +64,7 @@ QString FigureControllers::getPathToIconByIndex(int index)
     return "";
 }
 
+
 void FigureControllers::getFigureByIndex(int index)
 {
     int row = index / SIZE;
@@ -71,14 +72,13 @@ void FigureControllers::getFigureByIndex(int index)
     int getIdFromArrayFigures = arrayFigures[row][column];
     bool beatFigure = false;
     int beatIndex = -1;
-    if (getIdFromArrayFigures == 0 && selectedIndexFigure != 0)  {
+    if (getIdFromArrayFigures == 0)  {
         qCritical() << "Not_select_figure" << selectedIndexFigure << beatList();
         emit commandMoveToIndex(selectedIndexFigure, index);
         int rowSelectedIndex = selectedIndexFigure / SIZE;
         int columnSelectedIndex = selectedIndexFigure % SIZE;
         arrayFigures[rowSelectedIndex][columnSelectedIndex] = 0;
         arrayFigures[row][column] = selectedFigure;
-
         if(selectedFigure == WHITE_PAWN)
             firstStepWhite = false;
         if(selectedFigure == BLACK_PAWN)
@@ -361,6 +361,8 @@ void FigureControllers::printArray()
                 str.append("[BK] ");
             if(figure == 205)
                 str.append("[WK] ");
+
+
         }
         qDebug() << str;
 

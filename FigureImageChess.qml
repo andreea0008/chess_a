@@ -45,12 +45,13 @@ Item {
         }
 
         onCommandBeat: {
-//            if(beatTo == indexField)
-//                figure.visible = false
-//            if(beatFrom == indexField)
-//                figure.visible = false
-//            if(beatTo == indexField)
-//                figure.source = figureControllers.getPathToIconByIndex(beatTo)
+            if(beatTo == indexField){
+                figure.visible = true
+                figure.source = figureControllers.getPathToIconByIndex(beatTo)
+                console.log(figure.source)
+            }
+            if(beatFrom == indexField)
+                figure.visible = false
         }
     }
 }
