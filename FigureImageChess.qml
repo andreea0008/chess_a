@@ -38,20 +38,27 @@ Item {
         }
 
         onCommandMoveToIndex: {
-            if (moveFromIndex === indexField)
-                figure.visible = false
+            if (moveFromIndex === indexField){
+//                figure.visible = false
+                figure.source = ""
+            }
             if (moveToIndex === indexField)
                 figure.source = figureControllers.getPathToIconByIndex(moveFromIndex)
         }
 
         onCommandBeat: {
+//            console.log("[", indexField, beatTo, beatFrom, "]")
             if(beatTo == indexField){
                 figure.visible = true
                 figure.source = figureControllers.getPathToIconByIndex(beatTo)
-                console.log(figure.source)
+                console.log(figure.source, figureControllers.moveList)
             }
-            if(beatFrom == indexField)
+            if(beatFrom == indexField){
                 figure.visible = false
+                figure.source = ""
+                console.log("figure.source -> ", figure.source)
+            }
+
         }
     }
 }
