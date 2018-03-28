@@ -9,6 +9,7 @@
 #define EMPTY 0
 #define STEP_PAWN 1
 #define DOUBLE_STEP_PAWN 2
+#define MEDIANA_FIGURES 200
 
 class FigureControllers : public QObject
 {

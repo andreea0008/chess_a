@@ -17,7 +17,7 @@ QString FigureControllers::getPathToIconByIndex(int index)
     int row = index / SIZE;
     int column = index % SIZE;
     int getIdFromArrayFigures = arrayFigures[row][column];
-    if(getIdFromArrayFigures > 200){
+    if(getIdFromArrayFigures > MEDIANA_FIGURES){
         switch (getIdFromArrayFigures) {
         case WHITE_ROOK:
             return "qrc:/image/Img/white_rook.png";
@@ -98,7 +98,7 @@ void FigureControllers::getFigureByIndex(int index)
             arrayFigures[row][column] = selectedFigure;
             int rowSelectedIndex = selectedIndexFigure / SIZE;
             int columnSelectedIndex = selectedIndexFigure % SIZE;
-            arrayFigures[rowSelectedIndex][columnSelectedIndex] = 0;
+            arrayFigures[rowSelectedIndex][columnSelectedIndex] = EMPTY;
             int indexFrom = (rowSelectedIndex * SIZE) + columnSelectedIndex;
             int indexTo = (row * SIZE) + column;
             emit commandBeat(indexFrom, indexTo);
@@ -113,7 +113,7 @@ void FigureControllers::getFigureByIndex(int index)
     if(getIdFromArrayFigures != EMPTY)
         selectedIndexFigure = index;
 
-    if(getIdFromArrayFigures > 200 && isNextStepWhite){
+    if(getIdFromArrayFigures > MEDIANA_FIGURES && isNextStepWhite){
         switch (getIdFromArrayFigures) {
         case WHITE_ROOK:
             qDebug() <<  "white_rook" << row << column;
@@ -285,17 +285,17 @@ QVector<QVariant> FigureControllers::canPawnBeat(bool isWhite, int row, int colu
             //white figures beat left
             if(column -STEP_PAWN != -STEP_PAWN &&
                arrayFigures[row -STEP_PAWN][column -STEP_PAWN] != EMPTY &&
-               arrayFigures[row -STEP_PAWN][column +STEP_PAWN] < 200)
+               arrayFigures[row -STEP_PAWN][column +STEP_PAWN] < MEDIANA_FIGURES)
             {
-                if(arrayFigures[row-STEP_PAWN][column-STEP_PAWN] < 200)
+                if(arrayFigures[row-STEP_PAWN][column-STEP_PAWN] < MEDIANA_FIGURES)
                     vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row -STEP_PAWN, column -STEP_PAWN));
             }
             //white figures beat right
             if(column +STEP_PAWN != SIZE
                && arrayFigures[row -STEP_PAWN][column +STEP_PAWN] != EMPTY
-               && arrayFigures[row -STEP_PAWN][column +STEP_PAWN] < 200)
+               && arrayFigures[row -STEP_PAWN][column +STEP_PAWN] < MEDIANA_FIGURES)
             {
-                if(arrayFigures[row -STEP_PAWN][column +STEP_PAWN] < 200)
+                if(arrayFigures[row -STEP_PAWN][column +STEP_PAWN] < MEDIANA_FIGURES)
                     vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row -STEP_PAWN, column +STEP_PAWN));
             }
         }
@@ -304,18 +304,18 @@ QVector<QVariant> FigureControllers::canPawnBeat(bool isWhite, int row, int colu
             //black figure beat left
             if(column -STEP_PAWN != -STEP_PAWN
                && arrayFigures[row +STEP_PAWN][column -STEP_PAWN] != EMPTY
-               && arrayFigures[row +STEP_PAWN][column -STEP_PAWN] > 200)
+               && arrayFigures[row +STEP_PAWN][column -STEP_PAWN] > MEDIANA_FIGURES)
             {
-                if(arrayFigures[row +STEP_PAWN][column -STEP_PAWN] > 200)
+                if(arrayFigures[row +STEP_PAWN][column -STEP_PAWN] > MEDIANA_FIGURES)
                     vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row +STEP_PAWN, column -STEP_PAWN));
             }
 
             //black figure beat right
             if(column +STEP_PAWN != SIZE
                && arrayFigures[row +STEP_PAWN][column +STEP_PAWN] != EMPTY
-               && arrayFigures[row +STEP_PAWN][column +STEP_PAWN] > 200)
+               && arrayFigures[row +STEP_PAWN][column +STEP_PAWN] > MEDIANA_FIGURES)
             {
-                if(arrayFigures[row +STEP_PAWN][column +STEP_PAWN] > 200)
+                if(arrayFigures[row +STEP_PAWN][column +STEP_PAWN] > MEDIANA_FIGURES)
                     vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row +STEP_PAWN, column +STEP_PAWN));
             }
         }
@@ -325,35 +325,35 @@ QVector<QVariant> FigureControllers::canPawnBeat(bool isWhite, int row, int colu
 
 void FigureControllers::printArray()
 {
-    for(int i = 0; i < SIZE; i++){
+    for(int i = EMPTY; i < SIZE; i++){
         QString str;
-        for(int j = 0; j < SIZE; j++){
+        for(int j = EMPTY; j < SIZE; j++){
             int figure  = arrayFigures[i][j];
-            if(figure == 0)
+            if(figure == EMPTY)
                 str.append("[--] ");
-            if(figure == 111)
+            if(figure == BLACK_PAWN)
                 str.append("[BP] ");
-            if(figure == 211)
+            if(figure == WHITE_PAWN)
                 str.append("[WP] ");
-            if(figure == 101)
+            if(figure == BLACK_ROOK)
                 str.append("[BR] ");
-            if(figure == 201)
+            if(figure == WHITE_ROOK)
                 str.append("[WR] ");
-            if(figure == 102)
+            if(figure == BLACK_KNIGHT)
                 str.append("[BK] ");
-            if(figure == 202)
+            if(figure == WHITE_KNIGHT)
                 str.append("[WK] ");
-            if(figure == 103)
+            if(figure == BLACK_BISHOP)
                 str.append("[BB] ");
-            if(figure == 203)
+            if(figure == WHITE_BISHOP)
                 str.append("[WB] ");
-            if(figure == 104)
+            if(figure == BLACK_QUEEN)
                 str.append("[BQ] ");
-            if(figure == 204)
+            if(figure == WHITE_QUEEN)
                 str.append("[WQ] ");
-            if(figure == 105)
+            if(figure == BLACK_KING)
                 str.append("[BK] ");
-            if(figure == 205)
+            if(figure == WHITE_KING)
                 str.append("[WK] ");
         }
         qDebug() << str;
