@@ -28,7 +28,7 @@ void Board::fillArrayBoard()
 Board::Board(QObject *parent) :
     QObject(parent),
     m_widthAndHeightBoard(640),
-    m_sizeChessField(widthAndHeightBoard()/8)
+    m_sizeChessField(widthAndHeightBoard()/SIZE)
 {
     fillArrayBoard();
 }
@@ -45,10 +45,9 @@ int Board::sizeChessField() const
 
 QString Board::getColorByIndex(int index)
 {
-    int row = index / 8;
-    int column = index % 8;
-    QString color = arrayBoard[row][column] == 1 ? "#BDC3C7" : "#6C7A89";
-    return color;
+    int row = index / SIZE;
+    int column = index % SIZE;
+    return arrayBoard[row][column] == 1 ? "#BDC3C7" : "#6C7A89";
 }
 
 QString Board::colorBorderSelect()

@@ -42,6 +42,5 @@ void BlackFigures::fillArrayWhiteFigures()
         for(int j = 0; j < SIZE; j++){
             line += QString::number(arrayWhiteFigure[i][j]) + " ";
         }
-        qDebug() << line;
     }
 }

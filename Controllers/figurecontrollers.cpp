@@ -66,66 +66,54 @@ QString FigureControllers::getPathToIconByIndex(int index)
 
 void FigureControllers::getFigureByIndex(int index)
 {
+    if(index == EMPTY) return;
     int row = index / SIZE;
     int column = index % SIZE;
     int getIdFromArrayFigures = arrayFigures[row][column];
     bool beatFigure = false;
     int beatIndex = -1;
-    qDebug() << "isNextStepWhite" << isNextStepWhite;
-
-    if (getIdFromArrayFigures == 0)  {
-        qCritical() << "Not_select_figure" << selectedIndexFigure << beatList();
-        emit commandMoveToIndex(selectedIndexFigure, index);
-        int rowSelectedIndex = selectedIndexFigure / SIZE;
-        int columnSelectedIndex = selectedIndexFigure % SIZE;
-        arrayFigures[rowSelectedIndex][columnSelectedIndex] = 0;
-        arrayFigures[row][column] = selectedFigure;
-
-        if(selectedFigure == WHITE_PAWN)
-            firstStepWhite = false;
-        if(selectedFigure == BLACK_PAWN)
-            firstStepBlack = false;
-        isNextStepWhite = !isNextStepWhite;
-        printArray();
-//        return;
-
-    }else{
-        qDebug() << "you have selected figure";
+    if (getIdFromArrayFigures == EMPTY && selectedFigure != EMPTY &&
+            !moveList().isEmpty()){
+        if(isCommandMove(index)){
+            emit commandMoveToIndex(selectedIndexFigure, index);
+            int rowSelectedIndex = selectedIndexFigure / SIZE;
+            int columnSelectedIndex = selectedIndexFigure % SIZE;
+            arrayFigures[rowSelectedIndex][columnSelectedIndex] = EMPTY;
+            arrayFigures[row][column] = selectedFigure;
+            if(selectedFigure == WHITE_PAWN)
+                firstStepWhite = false;
+            if(selectedFigure == BLACK_PAWN)
+                firstStepBlack = false;
+            printArray();
+            isNextStepWhite = !isNextStepWhite;
+            selectedFigure = EMPTY;
+        }
+    }
+    if(getIdFromArrayFigures != EMPTY && selectedFigure != EMPTY && !beatList().isEmpty())
+    {
         beatFigure = true;
         beatIndex = index;
 
         if(isCommandBeat(index)){
-            qDebug() << "you can beat enemy figure";
             arrayFigures[row][column] = selectedFigure;
-
             int rowSelectedIndex = selectedIndexFigure / SIZE;
             int columnSelectedIndex = selectedIndexFigure % SIZE;
-
             arrayFigures[rowSelectedIndex][columnSelectedIndex] = 0;
-            qDebug() << "you can beat" << rowSelectedIndex << columnSelectedIndex << row << column << selectedFigure;
-
-            int indexFrom = (rowSelectedIndex * 8) + columnSelectedIndex;
-            int indexTo = (row * 8) + column;
-            qDebug() << "indexFrom: " << indexFrom << "index_to: " << indexTo << selectedIndexFigure << selectedFigure;
+            int indexFrom = (rowSelectedIndex * SIZE) + columnSelectedIndex;
+            int indexTo = (row * SIZE) + column;
             emit commandBeat(indexFrom, indexTo);
             getIdFromArrayFigures = arrayFigures[row][column];
-            qDebug() << "getIdFromArrayFigures: " << getIdFromArrayFigures;
             printArray();
-            selectedIndexFigure = index;
-            //            isNextStepWhite = isNextStepWhite;
-
-            //            return;
-
+            isNextStepWhite = !isNextStepWhite;
+            selectedFigure = EMPTY;
+            m_beatList.clear();
+            m_moveList.clear();
         }
     }
-    //    if(!beatFigure)
-    selectedIndexFigure = index;
-
-    qDebug() << "selectedIndexFigure: " << selectedIndexFigure << getIdFromArrayFigures;
+    if(getIdFromArrayFigures != EMPTY)
+        selectedIndexFigure = index;
 
     if(getIdFromArrayFigures > 200 && isNextStepWhite){
-        qDebug() << "selectedIndexFigure: " << selectedIndexFigure << index;
-
         switch (getIdFromArrayFigures) {
         case WHITE_ROOK:
             qDebug() <<  "white_rook" << row << column;
@@ -153,34 +141,32 @@ void FigureControllers::getFigureByIndex(int index)
             break;
         }
     }
-    else{
-        if(!isNextStepWhite){
-            //black figures
-            switch (getIdFromArrayFigures) {
-            case BLACK_ROOK:
-                qDebug() << "black_rook";
-                break;
-            case BLACK_KNIGHT:
-                qDebug() << "black_knight";
-                break;
-            case BLACK_BISHOP:
-                qDebug() <<"black_bishop";
-                break;
-            case BLACK_QUEEN:
-                qDebug() << "black_queen";
-                break;
-            case BLACK_KING:
-                qDebug() << "black_king";
-                break;
-            case BLACK_PAWN:
-                qDebug() << "black_pawn";
-                selectedFigure = BLACK_PAWN;
-                QVector<QVariant> variantMovePaws = movePawn(false, row, column);
-                QVector<QVariant> variansBeatPaws = canPawnBeat(false, row, column);
-                setMoveList(QVariantList::fromVector(variantMovePaws));
-                setBeatList(QVariantList::fromVector(variansBeatPaws));
-                break;
-            }
+    else if(!isNextStepWhite){
+        //black figures
+        switch (getIdFromArrayFigures) {
+        case BLACK_ROOK:
+            qDebug() << "black_rook";
+            break;
+        case BLACK_KNIGHT:
+            qDebug() << "black_knight";
+            break;
+        case BLACK_BISHOP:
+            qDebug() <<"black_bishop";
+            break;
+        case BLACK_QUEEN:
+            qDebug() << "black_queen";
+            break;
+        case BLACK_KING:
+            qDebug() << "black_king";
+            break;
+        case BLACK_PAWN:
+            qDebug() << "black_pawn";
+            selectedFigure = BLACK_PAWN;
+            QVector<QVariant> variantMovePaws = movePawn(false, row, column);
+            QVector<QVariant> variansBeatPaws = canPawnBeat(false, row, column);
+            setMoveList(QVariantList::fromVector(variantMovePaws));
+            setBeatList(QVariantList::fromVector(variansBeatPaws));
+            break;
         }
     }
 }
@@ -197,11 +183,7 @@ QVariantList FigureControllers::beatList() const
 
 bool FigureControllers::isCommandMove(int index) const
 {
-    foreach (QVariant indexFromList, moveList()) {
-        if(indexFromList.toInt() == index)
-            return true;
-    }
-    return false;
+    return moveList().contains(index);
 }
 
 bool FigureControllers::isCommandBeat(int index) const
@@ -211,18 +193,12 @@ bool FigureControllers::isCommandBeat(int index) const
 
 void FigureControllers::setMoveList(QVariantList moveList)
 {
-    //    if (m_moveList == moveList)
-    //        return;
-
     m_moveList = moveList;
     emit moveListChanged(moveList);
 }
 
 void FigureControllers::setBeatList(QVariantList beatList)
 {
-    //    if (m_beatList == beatList)
-    //        return;
-
     m_beatList = beatList;
     emit beatListChanged(beatList);
 }
@@ -275,30 +251,27 @@ void FigureControllers::fillArray()
 
 int FigureControllers::getIndexThrowRowAndColumn(int row, int column)
 {
-    int index = 0;
-    index += (row * SIZE);
-    index += column;
-    return index;
+    return (row * SIZE) + column;
 }
 
 QVector<QVariant> FigureControllers::movePawn(bool isWhite, int row, int column)
 {
     QVector<QVariant> vectorMovePaws;
     if(isWhite){
-        if(row-1 != -1){
-            if(arrayFigures[row - 1][column] == 0)
-                vectorMovePaws.push_back(getIndexThrowRowAndColumn(row-1, column));
+        if(row  -STEP_PAWN != -STEP_PAWN){
+            if(arrayFigures[row -STEP_PAWN][column] == EMPTY)
+                vectorMovePaws.push_back(getIndexThrowRowAndColumn(row -STEP_PAWN, column));
         }
-        if(firstStepWhite && arrayFigures[row - 2][column] == 0)
-            vectorMovePaws.push_back(getIndexThrowRowAndColumn(row-2, column));
+        if(firstStepWhite && arrayFigures[row -DOUBLE_STEP_PAWN][column] == EMPTY)
+            vectorMovePaws.push_back(getIndexThrowRowAndColumn(row -DOUBLE_STEP_PAWN, column));
     }
     else
     {
-        if(row + 1 != SIZE && arrayFigures[row+1][column] == 0){
-            vectorMovePaws.push_back(getIndexThrowRowAndColumn(row+1, column));
+        if(row +STEP_PAWN != SIZE && arrayFigures[row +STEP_PAWN][column] == EMPTY){
+            vectorMovePaws.push_back(getIndexThrowRowAndColumn(row +STEP_PAWN, column));
         }
-        if(firstStepBlack && arrayFigures[row+2][column] == 0){
-            vectorMovePaws.push_back(getIndexThrowRowAndColumn(row+2, column));
+        if(firstStepBlack && arrayFigures[row +DOUBLE_STEP_PAWN][column] == EMPTY){
+            vectorMovePaws.push_back(getIndexThrowRowAndColumn(row +DOUBLE_STEP_PAWN, column));
         }
     }
     return vectorMovePaws;
@@ -308,21 +281,42 @@ QVector<QVariant> FigureControllers::canPawnBeat(bool isWhite, int row, int colu
 {
     QVector<QVariant> vectorPawnBeat;
     if(isWhite){
-        if(row-1 != -1 ){
-            if(column -1 != -1  && arrayFigures[row-1][column-1] != 0 && arrayFigures[row-1][column+1] < 200){
-                vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row-1, column -1));
+        if(row -STEP_PAWN != -STEP_PAWN ){
+            //white figures beat left
+            if(column -STEP_PAWN != -STEP_PAWN &&
+               arrayFigures[row -STEP_PAWN][column -STEP_PAWN] != EMPTY &&
+               arrayFigures[row -STEP_PAWN][column +STEP_PAWN] < 200)
+            {
+                if(arrayFigures[row-STEP_PAWN][column-STEP_PAWN] < 200)
+                    vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row -STEP_PAWN, column -STEP_PAWN));
             }
-            if(column +1 != SIZE && arrayFigures[row-1][column+1] != 0 && arrayFigures[row-1][column+1] < 200){
-                vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row-1, column +1));
+            //white figures beat right
+            if(column +STEP_PAWN != SIZE
+               && arrayFigures[row -STEP_PAWN][column +STEP_PAWN] != EMPTY
+               && arrayFigures[row -STEP_PAWN][column +STEP_PAWN] < 200)
+            {
+                if(arrayFigures[row -STEP_PAWN][column +STEP_PAWN] < 200)
+                    vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row -STEP_PAWN, column +STEP_PAWN));
             }
         }
     }else{
-        if(row+1 != SIZE ){
-            if(column -1 != -1 && arrayFigures[row+1][column-1] != 0 && arrayFigures[row+1][column-1] > 200){
-                vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row+1, column -1));
+        if(row +STEP_PAWN != SIZE ){
+            //black figure beat left
+            if(column -STEP_PAWN != -STEP_PAWN
+               && arrayFigures[row +STEP_PAWN][column -STEP_PAWN] != EMPTY
+               && arrayFigures[row +STEP_PAWN][column -STEP_PAWN] > 200)
+            {
+                if(arrayFigures[row +STEP_PAWN][column -STEP_PAWN] > 200)
+                    vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row +STEP_PAWN, column -STEP_PAWN));
             }
-            if(column +1 != SIZE && arrayFigures[row+1][column+1] != 0 && arrayFigures[row+1][column+1] > 200){
-                vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row+1, column +1));
+
+            //black figure beat right
+            if(column +STEP_PAWN != SIZE
+               && arrayFigures[row +STEP_PAWN][column +STEP_PAWN] != EMPTY
+               && arrayFigures[row +STEP_PAWN][column +STEP_PAWN] > 200)
+            {
+                if(arrayFigures[row +STEP_PAWN][column +STEP_PAWN] > 200)
+                    vectorPawnBeat.push_back(getIndexThrowRowAndColumn(row +STEP_PAWN, column +STEP_PAWN));
             }
         }
     }

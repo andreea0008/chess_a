@@ -6,6 +6,10 @@
 #include <QVariant>
 
 #define SIZE 8
+#define EMPTY 0
+#define STEP_PAWN 1
+#define DOUBLE_STEP_PAWN 2
+
 class FigureControllers : public QObject
 {
     Q_OBJECT

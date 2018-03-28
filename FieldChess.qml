@@ -30,9 +30,13 @@ Rectangle {
                 }
             }
         }
-        onCommandMoveToIndex: {
-            fieldMain.border.width = 0
-            fieldMain.color = board.getColorByIndex(indexField)
-        }
+        onCommandMoveToIndex: resetVisibleBoardAfterBeatOrMove();
+
+        onCommandBeat: resetVisibleBoardAfterBeatOrMove();
+    }
+
+    function resetVisibleBoardAfterBeatOrMove(){
+        fieldMain.border.width = 0
+        fieldMain.color = board.getColorByIndex(indexField)
     }
 }
