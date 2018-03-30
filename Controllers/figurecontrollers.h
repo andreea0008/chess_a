@@ -8,7 +8,10 @@
 #define SIZE 8
 #define EMPTY 0
 #define STEP_PAWN 1
+#define STEP_KING 1
 #define DOUBLE_STEP_PAWN 2
+#define SHORT_STEP_KNIGHT 1
+#define LONG_STEP_KNIGHT 2
 #define MEDIANA_FIGURES 200
 
 class FigureControllers : public QObject
@@ -46,7 +49,18 @@ signals:
 
 private:
     QVector<QVariant> movePawn(bool isWhite, int row, int column);
+    QVector<QVariant> moveKnight(int row, int column);
+    QVector<QVariant> moveRook(int row, int column);
+    QVector<QVariant> moveBishop(int row, int column);
+    QVector<QVariant> moveQueen(int row, int column);
+    QVector<QVariant> moveKing(int row, int column);
+
     QVector<QVariant> canPawnBeat(bool isWhite, int row, int column);
+    QVector<QVariant> canKnightBeat(bool isWhite, int row, int column);
+    QVector<QVariant> canRookBeat(bool isWhite, int row, int column);
+    QVector<QVariant> canBishopBeat(bool isWhite, int row, int column);
+    QVector<QVariant> canQueenBeat(bool isWhite, int row, int column);
+    QVector<QVariant> canKingBeat(bool isWhite, int row, int column);
     QVariantList m_moveList;
     QVariantList m_beatList;
 
