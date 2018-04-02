@@ -8,7 +8,8 @@ SOURCES += main.cpp \
     Controllers/whitefigures.cpp \
     Controllers/figure.cpp \
     Controllers/blackfigures.cpp \
-    Controllers/figurecontrollers.cpp
+    Controllers/figurecontrollers.cpp \
+    Controllers/logofchessmove.cpp
 
 RESOURCES += qml.qrc
 
@@ -38,4 +39,5 @@ HEADERS += Controllers/board.h \
     Controllers/whitefigures.h \
     Controllers/figure.h \
     Controllers/blackfigures.h \
-    Controllers/figurecontrollers.h
+    Controllers/figurecontrollers.h \
+    Controllers/logofchessmove.h

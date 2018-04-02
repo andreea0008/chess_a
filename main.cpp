@@ -5,6 +5,7 @@
 #include "Controllers/whitefigures.h"
 #include "Controllers/blackfigures.h"
 #include "Controllers/figurecontrollers.h"
+#include "Controllers/logofchessmove.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,12 +17,13 @@ int main(int argc, char *argv[])
     WhiteFigures whiteFigures(&engine);
     BlackFigures blackFigures(&engine);
     FigureControllers figureControllers(&engine);
+    LogOfChessMove logOfChessMove(&engine);
 
     engine.rootContext()->setContextProperty("board", &board);
     engine.rootContext()->setContextProperty("whiteFigures", &whiteFigures);
     engine.rootContext()->setContextProperty("blackFigures", &blackFigures);
     engine.rootContext()->setContextProperty("figureControllers", &figureControllers);
-
+    engine.rootContext()->setContextProperty("logOfChessMove", &logOfChessMove);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

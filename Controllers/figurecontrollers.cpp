@@ -223,8 +223,6 @@ bool FigureControllers::isCommandBeat(int index) const
 
 void FigureControllers::setMoveList(QVariantList moveList)
 {
-    qDebug() << moveList;
-
     m_moveList = moveList;
     emit moveListChanged(moveList);
 }
@@ -386,7 +384,6 @@ QVector<QVariant> FigureControllers::moveRook(int row, int column)
         else
             break;
     }
-
     //move down
     for(int nextDownStep = 1; nextDownStep < (SIZE); nextDownStep++){
         int identifireNextDownFigure = arrayFigures[row +nextDownStep][column];

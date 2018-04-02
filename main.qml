@@ -4,43 +4,40 @@ import QtQuick.Window 2.2
 
 Window {
     visible: true
-    width: board.widthAndHeightBoard
-    height: width
-    title: qsTr("Hello World")
+    width: board.widthAndHeightBoard + rightSideBorder.width + 20
+    height: board.widthAndHeightBoard + 20
+    title: qsTr("Chess World")
 
-    Rectangle{
+    Item{
         anchors.fill: parent
-        color: "transparent"
 
-        Grid{
-            anchors.centerIn: parent
-            width: board.widthAndHeightBoard
-            height: width
-            rows: 8
-            columns: 8
-
-            Repeater{
-                model: 64
-
-                FieldChess{
-                    indexField: index
-                }
-            }
+        MainField{
 
         }
-        Grid{
-            anchors.fill: parent
-            rows: 8
-            columns: 8
-            anchors.centerIn: parent
-            width: board.widthAndHeightBoard
-            height: width
 
-            Repeater{
-                model: 64
+        Rectangle{
+            id: rightSideBorder
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            color: "#1b1b1b"
+            width: 300
 
-                FigureImageChess{
-                    indexField: index
+            ListView{
+                anchors.fill: parent
+                model: logOfChessMove
+                spacing: 1
+                delegate: Rectangle{
+                    width: parent.width
+                    height: 30
+                    Text {
+                        id: name
+                        text: moveChess
+                        color: "black"
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 20
+                    }
                 }
             }
         }

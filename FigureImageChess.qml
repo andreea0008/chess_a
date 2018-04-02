@@ -8,10 +8,11 @@ Item {
     property int indexField: 0
     property int selectedIndexField: 100
     property variant listMove: figureControllers.moveList
+    property real percentFromWidthAndHeight: 0.75
     Image {
         id: figure
         anchors.centerIn: parent
-        width: parent.width * 0.75
+        width: parent.width * percentFromWidthAndHeight
         height: width
         source: figureControllers.getPathToIconByIndex(index)
     }
@@ -37,8 +38,10 @@ Item {
             if (moveFromIndex === indexField){
                 figure.source = ""
             }
-            if (moveToIndex === indexField)
+            if (moveToIndex === indexField){
                 figure.source = figureControllers.getPathToIconByIndex(moveFromIndex)
+                logOfChessMove.addMove(moveFromIndex, moveToIndex)
+            }
         }
 
         onCommandBeat: {
