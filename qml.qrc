@@ -4,6 +4,7 @@
         <file>FieldChess.qml</file>
         <file>FigureImageChess.qml</file>
         <file>MainField.qml</file>
+        <file>QueueOfMove.qml</file>
     </qresource>
     <qresource prefix="/image">
         <file>Img/black_pawn.png</file>

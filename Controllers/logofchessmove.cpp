@@ -65,13 +65,13 @@ void LogOfChessMove::addMove(int indexFrom, int indexTo)
 
 QString LogOfChessMove::createDescription(int indexFrom, int indexTo)
 {
-    return getPositionByIndex(indexFrom) + " - "+ getPositionByIndex(indexTo);
+    return getPositionByIndex(indexFrom) + " -> "+ getPositionByIndex(indexTo);
 }
 
 QString LogOfChessMove::getPositionByIndex(int index)
 {
-    QString array[8]{"A", "B", "C", "D", "E", "F", "G", "H"};
+    QString array[8]{ "A", "B", "C", "D", "E", "F", "G", "H" };
     QString column = array[index % SIZE];
-    QString row = QString::number(((COUNT_OF_CHESS_FIELD - index) / SIZE) + 1);
+    QString row = QString::number(((COUNT_OF_CHESS_FIELD - index) / SIZE) +1);
     return column+row;
 }

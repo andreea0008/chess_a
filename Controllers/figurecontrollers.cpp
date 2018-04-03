@@ -7,7 +7,7 @@
 FigureControllers::FigureControllers(QObject *parent) : QObject(parent),
     firstStepBlack(true),
     firstStepWhite(true),
-    isNextStepWhite(true)
+    m_isNextStepWhite(true)
 {
     fillArray();
 }
@@ -85,7 +85,7 @@ void FigureControllers::getFigureByIndex(int index)
             if(selectedFigure == BLACK_PAWN)
                 firstStepBlack = false;
             printArray();
-            isNextStepWhite = !isNextStepWhite;
+            setIsNextStepWhite(!isNextStepWhite());
             selectedFigure = EMPTY;
         }
     }
@@ -104,7 +104,7 @@ void FigureControllers::getFigureByIndex(int index)
             emit commandBeat(indexFrom, indexTo);
             getIdFromArrayFigures = arrayFigures[row][column];
             printArray();
-            isNextStepWhite = !isNextStepWhite;
+            setIsNextStepWhite(!isNextStepWhite());
             selectedFigure = EMPTY;
             m_beatList.clear();
             m_moveList.clear();
@@ -113,7 +113,7 @@ void FigureControllers::getFigureByIndex(int index)
     if(getIdFromArrayFigures != EMPTY)
         selectedIndexFigure = index;
 
-    if(getIdFromArrayFigures > MEDIANA_FIGURES && isNextStepWhite){
+    if(getIdFromArrayFigures > MEDIANA_FIGURES && isNextStepWhite()){
         switch (getIdFromArrayFigures) {
         case WHITE_ROOK:
             qDebug() <<  "white_rook" << row << column;
@@ -156,7 +156,7 @@ void FigureControllers::getFigureByIndex(int index)
             break;
         }
     }
-    else if(!isNextStepWhite){
+    else if(!isNextStepWhite()){
         //black figures
         switch (getIdFromArrayFigures) {
         case BLACK_ROOK:
@@ -221,6 +221,11 @@ bool FigureControllers::isCommandBeat(int index) const
     return beatList().contains(index);
 }
 
+bool FigureControllers::isNextStepWhite() const
+{
+    return m_isNextStepWhite;
+}
+
 void FigureControllers::setMoveList(QVariantList moveList)
 {
     m_moveList = moveList;
@@ -231,6 +236,15 @@ void FigureControllers::setBeatList(QVariantList beatList)
 {
     m_beatList = beatList;
     emit beatListChanged(beatList);
+}
+
+void FigureControllers::setIsNextStepWhite(bool isNextStepWhite)
+{
+    if (m_isNextStepWhite == isNextStepWhite)
+        return;
+
+    m_isNextStepWhite = isNextStepWhite;
+    emit isNextStepWhiteChanged(isNextStepWhite);
 }
 
 void FigureControllers::fillArray()
@@ -807,7 +821,7 @@ QVector<QVariant> FigureControllers::canBishopBeat(bool isWhite, int row, int co
         if((identifireNextDownAndLeftBeatFigure != EMPTY) && (row +stepToDownAndLeft < SIZE) && (column -stepToDownAndLeft >= EMPTY))
         {
             bool nextFigureEnemyBlack = identifireNextDownAndLeftBeatFigure < MEDIANA_FIGURES;
-            if((!nextFigureEnemyBlack && isWhite) && (nextFigureEnemyBlack && !isWhite))
+            if((!nextFigureEnemyBlack && isWhite) || (nextFigureEnemyBlack && !isWhite))
                 break;
 
             if(isWhite && nextFigureEnemyBlack){
@@ -828,7 +842,7 @@ QVector<QVariant> FigureControllers::canBishopBeat(bool isWhite, int row, int co
         if((identifireNextDownAndRightBeatFigure != EMPTY) && (row +stepToDownAndRight < SIZE) && (column +stepToDownAndRight < SIZE))
         {
             bool nextFigureEnemyBlack = identifireNextDownAndRightBeatFigure < MEDIANA_FIGURES;
-            if((!nextFigureEnemyBlack && isWhite) && (nextFigureEnemyBlack && !isWhite))
+            if((!nextFigureEnemyBlack && isWhite) || (nextFigureEnemyBlack && !isWhite))
                 break;
 
             if(isWhite && nextFigureEnemyBlack){

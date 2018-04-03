@@ -19,6 +19,7 @@ class FigureControllers : public QObject
     Q_OBJECT
     Q_PROPERTY(QVariantList moveList READ moveList WRITE setMoveList NOTIFY moveListChanged)
     Q_PROPERTY(QVariantList beatList READ beatList WRITE setBeatList NOTIFY beatListChanged)
+    Q_PROPERTY(bool isNextStepWhite READ isNextStepWhite WRITE setIsNextStepWhite NOTIFY isNextStepWhiteChanged)
 
     enum FIGURE{
         BLACK_PAWN = 111, BLACK_ROOK = 101, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING,
@@ -33,11 +34,13 @@ public:
     QVariantList beatList() const;
 
     bool isCommandMove(int index) const;
-    bool isCommandBeat(int index) const;
+    bool isCommandBeat(int index) const;    
+    bool isNextStepWhite() const;
 
 public slots:
     void setMoveList(QVariantList moveList);
-    void setBeatList(QVariantList beatList);
+    void setBeatList(QVariantList beatList);    
+    void setIsNextStepWhite(bool isNextStepWhite);
 
 signals:
     void possibleChessMove(QVector<QVariant> listMove);
@@ -45,7 +48,8 @@ signals:
     void moveListChanged(QVariantList moveList);
     void beatListChanged(QVariantList beatList);
     void commandMoveToIndex(int moveFromIndex, int moveToIndex);
-    void commandBeat(int beatFrom, int beatTo);
+    void commandBeat(int beatFrom, int beatTo);    
+    void isNextStepWhiteChanged(bool isNextStepWhite);
 
 private:
     QVector<QVariant> movePawn(bool isWhite, int row, int column);
@@ -67,12 +71,12 @@ private:
     int selectedIndexFigure;
     int selectedFigure;
     bool firstStepBlack, firstStepWhite;
-    bool isNextStepWhite;
     int arrayFigures[SIZE][SIZE];
 
     void fillArray();    
     int getIndexThrowRowAndColumn(int row, int column);
     void printArray();
+    bool m_isNextStepWhite;
 };
 
 #endif // FIGURECONTROLLERS_H
